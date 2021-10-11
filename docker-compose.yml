@@ -59,6 +59,19 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
       SCHEMA_REGISTRY_HOST_NAME: schemaregistry
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+   
+  kafka-rest:
+    image: confluentinc/cp-kafka-rest:5.4.0
+    hostname: kafka-rest
+    ports:
+    - "38082:38082"
+    depends_on:
+      - schema-registry
+    environment:
+      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_REST_SCHEMA_REGISTRY_URL: schema-registry:8081
+      KAFKA_REST_HOST_NAME: kafka-rest
+      KAFKA_REST_LISTENERS: http://kafka-rest:38082
 
   # https://hub.docker.com/r/hlebalbau/kafka-manager/
   # Kafka Manager: http://localhost:9000
