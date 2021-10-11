@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-tick-producer
+spec:
+  selector:
+    matchLabels:
+      app: stock-tick-producer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: stock-tick-producer
+    spec:
+      imagePullSecrets:
+      - name: nexus.jhidalgo3.me
+      containers:
+        - name: stock-tick-producer
+          image: nexus.jhidalgo3.me:444/stock-tick-producer-avro:latest
+          imagePullPolicy: IfNotPresent
+          
+          ports:
+            - containerPort: 8080
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "deleser"
