@@ -13,15 +13,25 @@ spec:
       labels:
         app: stock-tick-producer
     spec:
+      volumes:
+      - name: config-volume
+        configMap:
+          name: stock-tick-producer
       imagePullSecrets:
       - name: nexus.jhidalgo3.me
       containers:
         - name: stock-tick-producer
           image: nexus.jhidalgo3.me:444/stock-tick-producer-avro:latest
           imagePullPolicy: IfNotPresent
-          
+          volumeMounts:
+           - name: config-volume
+             mountPath: /sprinb-boot/config
           ports:
             - containerPort: 8080
           env:
-          - name: SPRING_PROFILES_ACTIVE
-            value: "deleser"
+          #- name: SPRING_PROFILES_ACTIVE
+          #  value: "deleser"
+          
+          - name: SPRING_CONFIG_LOCATION
+            value: "/sprinb-boot/config/"
+           

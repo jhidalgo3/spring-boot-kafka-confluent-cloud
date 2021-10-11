@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: stock-tick-producer-avro
+  name: stock-tick-producer
 data:
   application.yml: |-
    server:

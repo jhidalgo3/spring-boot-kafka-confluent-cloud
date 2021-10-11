@@ -22,9 +22,19 @@ spring:
     # application startup
     listener:
       missing-topics-fatal: false
-
+        
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+      probes:
+         enabled: true
+      livenessState:
+         enabled: true
+      readinessState:
+         enabled: true

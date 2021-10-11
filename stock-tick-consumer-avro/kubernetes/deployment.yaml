@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-tick-consumer
+spec:
+  selector:
+    matchLabels:
+      app: stock-tick-consumer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: stock-tick-consumer
+    spec:
+      imagePullSecrets:
+      - name: nexus.jhidalgo3.me
+      containers:
+        - name: stock-tick-consumer
+          image: nexus.jhidalgo3.me:444/stock-tick-consumer-avro:latest
+          imagePullPolicy: Always
+          
+          ports:
+            - containerPort: 8080
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "deleser"
