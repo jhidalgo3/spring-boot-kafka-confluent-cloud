@@ -1,0 +1,129 @@
+replicaCount: 1
+
+image:
+  repository: jhidalgo3/stock-tick-producer-avro
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets:
+  - name: docker.io
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+existingConfigMap: ""
+existingSecret: ""
+envs:
+  secret: {}
+  config: 
+    application.yml: |-
+      server:
+        port: 8080
+      
+      spring:
+        application:
+          name: "stock-tick-producer-avro"
+      
+        kafka:
+          bootstrap-servers: 192.168.2.8:29092
+          properties:
+            # Schema Registry Connection parameter
+            schema.registry.url: http://192.168.2.8:8081
+          producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+            client-id: ${spring.application.name}
+            properties:
+              enable.idempotence: true
+      
+      stockTick:
+        producer:
+          # Mimic the stock exchange create a random stock tick every configured milliseconds
+          rateInMs: 1000
+      
+      # Open up all Spring Boot Actuator endpoints
+      management:
+        endpoints:
+          web:
+            exposure:
+              include: "*"
+      
+        endpoint:
+          health:
+            show-details: always
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  # if you want to force a specific nodePort. Must be use with service.type=NodePort
+  # nodePort:
+
+# Ingress configuration
+ingress:
+  # Enable ingress resource
+  enabled: false
+
+  # Annotations for the Ingress
+  annotations: {}
+
+  # The path for the Ingress
+  path: ""
+
+  # The hostname for the Ingress
+  host: ""
+
+  # configs for Ingress TLS
+  tls:
+    # Enable TLS termination for the Ingress
+    enabled: false
+    # the name of a pre-created Secret containing a TLS private key and certificate
+    secretName: ""
+
+  # HTTP paths to add to the Ingress before the default path
+  precedingPaths: []
+
+  # Http paths to add to the Ingress after the default path
+  succeedingPaths: []
+
+resources: {}
+  # limits:
+  #   cpu: 200m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 200m
+  #   memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

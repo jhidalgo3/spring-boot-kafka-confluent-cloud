@@ -160,3 +160,8 @@ Consumer:
 java -jar stock-tick-consumer-avro/target/stock-tick-consumer-avro-0.0.1-SNAPSHOT.jar
 ```
 
+# Helm installation
+
+helm upgrade --install -n kafka -f values-producer.yml stock-tick-producer-avro ./helm-chart
+
+helm upgrade --install -n kafka -f values-consumer.yml stock-tick-consumer-avro ./helm-chart

@@ -1,0 +1,24 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: "stock-tick-producer-avro"
+
+  kafka:
+    bootstrap-servers: 192.168.2.8:29092
+    properties:
+      # Schema Registry Connection parameter
+      schema.registry.url: http://192.168.2.8:8081
+
+
+# Open up all Spring Boot Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always

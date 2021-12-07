@@ -1,0 +1,22 @@
+apiVersion: keda.sh/v1alpha1                  
+kind: ScaledObject
+metadata:
+  name: stock-tick-consumer-scaledobject
+  namespace: default
+  labels:
+    deploymentName: nginx # Required Name of the deployment we want to scale.
+spec:
+  scaleTargetRef:
+    name: nginx # Required Name of the deployment we want to scale.
+  pollingInterval: 10
+  minReplicaCount: 0  #Optional Default 0
+  maxReplicaCount: 2  #Optional Default 100
+  triggers:
+  - type: kafka
+    metadata:
+      # Required
+      bootstrapServers: 192.168.2.8:29092 # Kafka bootstrap server host and port
+      consumerGroup: stock-tick-consumer-avro-group # Make sure that this consumer group name is the same one as the one that is consuming topics
+      topic: stock-ticks-avro
+      lagThreshold: "10" # Optional. How much the stream is lagging on the current consumer group
+      offsetResetPolicy: latest
